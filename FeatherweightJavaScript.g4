@@ -44,6 +44,8 @@ BLOCK_COMMENT : '/*' .*? '*/' -> skip ;
 LINE_COMMENT  : '//' ~[\n\r]* -> skip ;  //
 WS            : [ \t]+ -> skip ; // ignore whitespace  //
 
+// Extra
+EQUALS      : '=' ;
 
 // ***Paring rules ***
 
@@ -61,10 +63,10 @@ stat: expr SEPARATOR                                    # bareExpr  //
 expr: expr op=( '*' | '/' | '%' ) expr                  # MulDivMod  //
     | expr op=( '+' | '-' ) expr                        # AddSub
     | expr op=( LESSER | LESSER_EQ | GREATER | GREATER_EQ | EQ_EQ ) expr   # comparisons 
-    | expr FUNCTION expr block                          # functionDecl
-    | FUNCTION expr                          # functionAppl
-    | VAR VARIABLE '=' expr                             # varDecl
-    | VARIABLE '=' expr                                 # assignmentStat
+    | FUNCTION params block                             # functionDecl
+    | FUNCTION args                                     # functionAppl      //NOT SURE ABOUT THIS
+    | VAR VARIABLE EQUALS expr                          # varDecl
+    | VARIABLE EQUALS expr                              # assignmentStat
     | VARIABLE                                          # varReference   
     | INT                                               # int  //
     | BOOL                                              # bool
@@ -76,3 +78,10 @@ block: '{' stat* '}'                                    # fullBlock  //
      | stat                                             # simpBlock  //
      ;
 
+params: '( )'                                           # noParams
+      | '(' VARIABLE (',' VARIABLE)* ')'                # hasParams
+      ;
+
+args: '( )'                                             # noArgs
+    | '(' expr (',' expr)* ')'                          # hasArgs     
+    ;
