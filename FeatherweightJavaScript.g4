@@ -62,7 +62,7 @@ expr: expr op=( '*' | '/' | '%' ) expr                  # MulDivMod  //
     | expr op=( '+' | '-' ) expr                        # AddSub
     | expr op=( LESSER | LESSER_EQ | GREATER | GREATER_EQ | EQ_EQ ) expr   # comparisons 
     | expr FUNCTION expr block                          # functionDecl
-    | VARIABLE expr                                     # functionAppl
+    | FUNCTION expr                          # functionAppl
     | VAR VARIABLE '=' expr                             # varDecl
     | VARIABLE '=' expr                                 # assignmentStat
     | VARIABLE                                          # varReference   
