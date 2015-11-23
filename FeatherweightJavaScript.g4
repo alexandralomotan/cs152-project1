@@ -40,7 +40,7 @@ VARIABLE    : FIRST_CHAR CHAR* ;
 
 // Whitespace and comments
 NEWLINE   : '\r'? '\n' -> skip ;  //
-BLOCK_COMMENT : '/*' ~['*/'] -> skip ;
+BLOCK_COMMENT : '/*' .*? '*/' -> skip ;
 LINE_COMMENT  : '//' ~[\n\r]* -> skip ;  //
 WS            : [ \t]+ -> skip ; // ignore whitespace  //
 
@@ -61,8 +61,8 @@ stat: expr SEPARATOR                                    # bareExpr  //
 expr: expr op=( '*' | '/' | '%' ) expr                  # MulDivMod  //
     | expr op=( '+' | '-' ) expr                        # AddSub
     | expr op=( LESSER | LESSER_EQ | GREATER | GREATER_EQ | EQ_EQ ) expr   # comparisons 
-    | FUNCTION '(' expr ')' block                       # functionDecl
-    | VARIABLE '(' expr (',' expr )*  ')'               # functionAppl
+    | expr FUNCTION expr block                          # functionDecl
+    | VARIABLE expr                                     # functionAppl
     | VAR VARIABLE '=' expr                             # varDecl
     | VARIABLE '=' expr                                 # assignmentStat
     | VARIABLE                                          # varReference   
